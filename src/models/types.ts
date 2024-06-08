@@ -3,12 +3,12 @@ export interface IPagination {
   pageSize: number;
 }
 
-export interface ISort<M> {
+export interface ISort<Fields extends string> {
   sortDirection: 'asc' | 'desc';
-  sortField: keyof M;
+  sortField: Fields;
 }
 
-export interface IListResponse<M> {
+export interface IListResponse<M extends Record<string, any>> {
   list: M[];
   pagination: IPagination & {
     pageCount: number;

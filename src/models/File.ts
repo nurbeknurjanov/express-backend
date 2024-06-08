@@ -1,5 +1,5 @@
 import mongoose, { Schema, Types, Model } from 'mongoose';
-import { IPagination } from './types';
+import { ISort } from './types';
 
 export interface IFile {
   _id: string;
@@ -13,12 +13,14 @@ export interface IFile {
   originalFileName: string;
   url: string;
 }
-export interface IFilePost extends Omit<IFile, '_id'> {}
-interface IFileFilter extends IPagination {}
-interface IFileFilter extends Omit<IFile, '_id'> {
+
+type IFileWithout_id = Omit<IFile, '_id'>;
+export interface IFilePost extends IFileWithout_id {}
+export interface IFileFilter extends IFileWithout_id {
   id: string;
 }
-export { IFileFilter };
+export type IFileSortFields = keyof IFileWithout_id;
+export interface IFileSort extends ISort<IFileSortFields> {}
 
 interface FileModel extends Model<IFile, {}> {}
 

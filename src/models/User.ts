@@ -1,5 +1,5 @@
-import mongoose, { Schema, Model, Types } from 'mongoose';
-import { IPagination, ISort } from './types';
+import mongoose, { Schema, Model } from 'mongoose';
+import { ISort } from './types';
 
 export enum SEX {
   MALE = 1,
@@ -20,14 +20,13 @@ export interface IUser {
   sex: SEX;
   status: STATUS;
 }
-
-export interface IUserPost extends Omit<IUser, '_id'> {}
-interface IUserFilter extends IPagination {}
-interface IUserFilter extends ISort<Omit<IUser, '_id'>> {}
-interface IUserFilter extends Omit<IUser, '_id'> {
+type IUserWithout_id = Omit<IUser, '_id'>;
+export interface IUserPost extends IUserWithout_id {}
+export interface IUserFilter extends IUserWithout_id {
   id: string;
 }
-export { IUserFilter };
+export type IUserSortFields = keyof IUserWithout_id;
+export interface IUserSort extends ISort<IUserSortFields> {}
 
 interface UserModel extends Model<IUser, IUser> {}
 

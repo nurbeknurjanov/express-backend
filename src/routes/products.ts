@@ -3,9 +3,11 @@ import { handleResponseError } from '../helpers';
 import {
   Product,
   IProduct,
-  IListResponse,
-  IProductFilter,
   IProductPost,
+  IListResponse,
+  IPagination,
+  IProductFilter,
+  IProductSort,
   File,
 } from '../models';
 import { ObjectId } from 'mongodb';
@@ -34,7 +36,12 @@ router.get(
 router.get(
   '/',
   async function (
-    req: Request<never, IListResponse<IProduct>, never, IProductFilter>,
+    req: Request<
+      never,
+      IListResponse<IProduct>,
+      never,
+      IPagination & IProductFilter & IProductSort
+    >,
     res
   ) {
     try {

@@ -5,9 +5,11 @@ import {
   IUser,
   IUserPost,
   IUserFilter,
+  IUserSort,
   IListResponse,
   SEX,
   STATUS,
+  IPagination,
 } from '../models';
 import { ObjectId } from 'mongodb';
 
@@ -73,7 +75,12 @@ router.get(
 router.get(
   '/',
   async function (
-    req: Request<never, IListResponse<IUser>, never, IUserFilter>,
+    req: Request<
+      never,
+      IListResponse<IUser>,
+      never,
+      IUserFilter & IPagination & IUserSort
+    >,
     res
   ) {
     try {

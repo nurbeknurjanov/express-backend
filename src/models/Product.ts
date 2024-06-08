@@ -1,5 +1,5 @@
 import mongoose, { Schema, Model, Types } from 'mongoose';
-import { IPagination, ISort } from './types';
+import { ISort } from './types';
 
 export interface IProduct {
   _id: string;
@@ -8,13 +8,13 @@ export interface IProduct {
   image: Types.ObjectId;
 }
 
-export interface IProductPost extends Omit<IProduct, '_id'> {}
-interface IProductFilter extends IPagination {}
-interface IProductFilter extends ISort<Omit<IProduct, '_id'>> {}
-interface IProductFilter extends Omit<IProduct, '_id'> {
+type IProductWithout_id = Omit<IProduct, '_id'>;
+export interface IProductPost extends IProductWithout_id {}
+export interface IProductFilter extends IProductWithout_id {
   id: string;
 }
-export { IProductFilter };
+export type IProductSortFields = keyof IProductWithout_id;
+export interface IProductSort extends ISort<IProductSortFields> {}
 
 interface ProductModel extends Model<IProduct, IProduct> {}
 

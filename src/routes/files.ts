@@ -5,8 +5,10 @@ import {
   IFile,
   IFilePost,
   IFileFilter,
+  IFileSort,
   IListResponse,
   Product,
+  IPagination,
 } from '../models';
 import { ObjectId } from 'mongodb';
 import multer from 'multer';
@@ -139,7 +141,12 @@ router.post(
 router.get(
   '/',
   async function (
-    req: Request<never, IListResponse<IFile>, never, IFileFilter>,
+    req: Request<
+      never,
+      IListResponse<IFile>,
+      never,
+      IFileFilter & IPagination & IFileSort
+    >,
     res
   ) {
     try {
