@@ -74,7 +74,7 @@ router.get(
       }
 
       const list = await cursor;
-      const count = await Product.countDocuments();
+      const count = await Product.countDocuments(cursor);
 
       res.send({
         list,
