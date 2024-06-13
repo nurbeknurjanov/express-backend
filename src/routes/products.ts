@@ -74,7 +74,7 @@ router.get(
       }
 
       const list = await cursor;
-      const count = await Product.countDocuments(cursor);
+      const count = await Product.countDocuments();
 
       res.send({
         list,
@@ -102,7 +102,10 @@ router.get(
         return handleResponseError(res, new Error('Bad format id'));
       }
 
-      const model = await Product.findById(id);
+      const model = await Product.findById(id).populate(
+        'image',
+        'url data.type'
+      );
       if (!model) {
         return handleResponseError(res, new Error('Product not found'));
       }
@@ -181,8 +184,17 @@ router
           return handleResponseError(res, new Error('Bad format id'));
         }
 
-        const deletedModel = await Product.findByIdAndDelete(id);
-        res.send(deletedModel!);
+        const model = await Product.findById(id);
+        if (model) {
+          await model!.deleteOne();
+
+          if (model.image) {
+            console.log('model.image', model.image);
+            await File.findByIdAndDelete(model.image);
+          }
+        }
+
+        res.send(model!);
       } catch (error) {
         if (error instanceof Error) {
           handleResponseError(res, error);

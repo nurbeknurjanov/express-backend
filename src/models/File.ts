@@ -1,5 +1,7 @@
 import mongoose, { Schema, Types, Model } from 'mongoose';
 import { ISort } from './types';
+import { Product } from './Product';
+import fsPromise from 'node:fs/promises';
 
 export interface IFile {
   _id: string;
@@ -63,5 +65,51 @@ const schema = new Schema<IFile, FileModel>(
   const count = await File.countDocuments();
   doc.assetId = count + 1;
 });*/
+
+schema.pre(
+  'deleteOne',
+  { document: true, query: false },
+  async function (next) {
+    const doc = this;
+
+    try {
+      if (doc.modelId && doc.modelName === 'Product' && doc.data?.type) {
+        await Product.findByIdAndUpdate(doc.modelId, {
+          //[deletedModel!.data.type]: null,
+          $unset: { [doc.data.type]: 1 },
+        });
+      }
+
+      await fsPromise.unlink(
+        `${__dirname}/../../public/images/${doc._id}.${doc.ext}`
+      );
+    } catch (err) {
+      //next(err);
+      return new Promise((resolve, reject) => {
+        reject(err);
+      });
+    }
+  }
+);
+
+schema.post('save', async function (doc) {
+  try {
+    if (
+      doc.modelName === 'Product' &&
+      doc.modelId &&
+      doc.data &&
+      doc.data.type
+    ) {
+      await Product.findByIdAndUpdate(doc.modelId, {
+        [doc.data.type]: doc._id,
+      });
+    }
+  } catch (err) {
+    //next(err);
+    return new Promise((resolve, reject) => {
+      reject(err);
+    });
+  }
+});
 
 export const File = mongoose.model<IFile, FileModel>('File', schema);

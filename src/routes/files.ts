@@ -81,7 +81,6 @@ router.post(
 
         preModel.modelName = req.body.modelName ?? null;
         preModel.modelId = req.body.modelId ?? null;
-
         if (req.body.data) {
           preModel.data =
             typeof req.body.data === 'string'
@@ -90,14 +89,12 @@ router.post(
         }
 
         const model = await preModel.save();
-        //await model.updateOne({}, {ext});
 
         if (process.env.NODE_ENV === 'development') {
           /*await fsPromise.rename(
             path,
             `${__dirname}/../../public/images/${model._id}.${model.ext}`
           );*/
-
           await fsPromise.writeFile(
             `${__dirname}/../../public/images/${model._id}.${model.ext}`,
             buffer
@@ -109,23 +106,9 @@ router.post(
             Body: buffer,
             //Body: fs.createReadStream(path),
           });
-
-          const response = await client.send(command);
+          await client.send(command);
         }
 
-        if (
-          model &&
-          model.modelName === 'Product' &&
-          model.modelId &&
-          model.data &&
-          model.data.type
-        ) {
-          await Product.findByIdAndUpdate(model.modelId, {
-            [model.data.type]: model._id,
-          });
-        }
-
-        //res.send(response);
         return res.send(model);
       }
 
@@ -206,26 +189,6 @@ router.get(
   }
 );
 
-router.put(
-  '/:id',
-  async function (req: Request<{ id: string }, IFile, IFilePost, never>, res) {
-    try {
-      const id = req.params.id;
-      if (!ObjectId.isValid(id)) {
-        return handleResponseError(res, new Error('Bad format id'));
-      }
-      await File.findByIdAndUpdate(id, req.body);
-
-      const model = await File.findById(id);
-      res.send(model!);
-    } catch (error) {
-      if (error instanceof Error) {
-        handleResponseError(res, error);
-      }
-    }
-  }
-);
-
 router.delete(
   '/:id',
   async function (req: Request<{ id: string }, IFile, never, never>, res) {
@@ -235,24 +198,8 @@ router.delete(
         return handleResponseError(res, new Error('Bad format id'));
       }
 
-      const deletedModel = await File.findByIdAndDelete(id);
-
-      if (
-        deletedModel!.modelId &&
-        deletedModel!.modelName === 'Product' &&
-        deletedModel!.data?.type
-      ) {
-        await Product.findByIdAndUpdate(deletedModel!.modelId, {
-          //[deletedModel!.data.type]: null,
-          $unset: { [deletedModel!.data.type]: 1 },
-        });
-      }
-
-      await fsPromise.unlink(
-        `${__dirname}/../../public/images/${deletedModel!._id}.${
-          deletedModel!.ext
-        }`
-      );
+      const deletedModel = await File.findById(id);
+      await deletedModel!.deleteOne();
 
       res.send(deletedModel!);
     } catch (error) {
