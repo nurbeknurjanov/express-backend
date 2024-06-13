@@ -128,17 +128,6 @@ router
         const preModel = new Product(req.body);
         const model = await preModel.save();
 
-        //nurbek
-        if (model.image) {
-          await File.findByIdAndUpdate(model.image, {
-            modelId: model._id,
-            modelName: 'Product',
-            data: {
-              type: 'image',
-            },
-          });
-        }
-
         res.send(model);
       } catch (error) {
         if (error instanceof Error) {
@@ -162,9 +151,13 @@ router
           return handleResponseError(res, new Error('Bad format id'));
         }
 
-        await Product.findByIdAndUpdate(id, req.body);
-
         const model = await Product.findById(id);
+        Object.entries(req.body).forEach(([key, value]) => {
+          //@ts-ignore
+          model[key] = value;
+        });
+        model!.save();
+
         res.send(model!);
       } catch (error) {
         if (error instanceof Error) {

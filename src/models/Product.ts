@@ -34,6 +34,25 @@ const schema = new Schema<IProduct, ProductModel>(
   }
 );
 
+schema.post('validate', async function (doc) {
+  try {
+    if (doc.isNew && doc.image) {
+      await File.findByIdAndUpdate(doc.image, {
+        modelId: doc._id,
+        modelName: 'Product',
+        data: {
+          type: 'image',
+        },
+      });
+    }
+  } catch (err) {
+    //next(err);
+    return new Promise((resolve, reject) => {
+      reject(err);
+    });
+  }
+});
+
 schema.pre(
   'deleteOne',
   { document: true, query: false },
