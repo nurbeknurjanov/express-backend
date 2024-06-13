@@ -128,6 +128,7 @@ router
         const preModel = new Product(req.body);
         const model = await preModel.save();
 
+        //nurbek
         if (model.image) {
           await File.findByIdAndUpdate(model.image, {
             modelId: model._id,
@@ -187,11 +188,6 @@ router
         const model = await Product.findById(id);
         if (model) {
           await model!.deleteOne();
-
-          if (model.image) {
-            console.log('model.image', model.image);
-            await File.findByIdAndDelete(model.image);
-          }
         }
 
         res.send(model!);

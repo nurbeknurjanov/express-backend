@@ -1,5 +1,7 @@
 import mongoose, { Schema, Model, Types } from 'mongoose';
 import { ISort } from './types';
+import { File } from './File';
+import fsPromise from 'node:fs/promises';
 
 export interface IProduct {
   _id: string;
@@ -29,6 +31,25 @@ const schema = new Schema<IProduct, ProductModel>(
   },
   {
     timestamps: true,
+  }
+);
+
+schema.pre(
+  'deleteOne',
+  { document: true, query: false },
+  async function (next) {
+    const doc = this;
+
+    try {
+      if (doc.image) {
+        const fileModel = await File.findById(doc.image);
+        if (fileModel) {
+          await fileModel.deleteOne();
+        }
+      }
+    } catch (err) {
+      next(err as Error);
+    }
   }
 );
 
