@@ -92,9 +92,12 @@ schema.pre(
   }
 );
 
+//on create file on product update
+//sync to product
 schema.post('save', async function (doc) {
   try {
     if (
+      doc.isNew &&
       doc.modelName === 'Product' &&
       doc.modelId &&
       doc.data &&

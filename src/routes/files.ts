@@ -79,6 +79,7 @@ router.post(
           originalFileName: originalname,
         });
 
+        //data on product update
         preModel.modelName = req.body.modelName ?? null;
         preModel.modelId = req.body.modelId ?? null;
         if (req.body.data) {
