@@ -66,6 +66,7 @@ const schema = new Schema<IFile, FileModel>(
   doc.assetId = count + 1;
 });*/
 
+//sync to update product
 schema.pre(
   'deleteOne',
   { document: true, query: false },

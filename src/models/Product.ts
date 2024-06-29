@@ -34,6 +34,7 @@ const schema = new Schema<IProduct, ProductModel>(
   }
 );
 
+//on product create
 schema.post('validate', async function (doc) {
   try {
     if (doc.isNew && doc.image) {
@@ -53,6 +54,7 @@ schema.post('validate', async function (doc) {
   }
 });
 
+//sync to file
 schema.pre(
   'deleteOne',
   { document: true, query: false },
