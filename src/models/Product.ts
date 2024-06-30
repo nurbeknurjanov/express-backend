@@ -37,6 +37,7 @@ const schema = new Schema<IProduct, ProductModel>(
 //on product create
 schema.post('validate', async function (doc) {
   try {
+    //doc.image is string, the ID of first created File
     if (doc.isNew && doc.image) {
       await File.findByIdAndUpdate(doc.image, {
         modelId: doc._id,
