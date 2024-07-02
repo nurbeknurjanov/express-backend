@@ -104,7 +104,7 @@ router.get(
 
       const model = await Product.findById(id).populate(
         'image',
-        'url data.type'
+        'url data.type ext'
       );
       if (!model) {
         return handleResponseError(res, new Error('Product not found'));

@@ -95,18 +95,19 @@ schema.pre(
 
 //on create file on product update
 //sync to product
-schema.post('save', async function (doc) {
+schema.pre('save', async function (next) {
+  const doc = this;
   try {
     if (
       doc.isNew &&
       doc.modelName === 'Product' &&
       doc.modelId &&
-      doc.data &&
-      doc.data.type
+      doc.data?.type
     ) {
       await Product.findByIdAndUpdate(doc.modelId, {
         [doc.data.type]: doc._id,
       });
+      return next();
     }
   } catch (err) {
     //next(err);
