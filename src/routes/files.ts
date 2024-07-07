@@ -82,12 +82,11 @@ router.post(
         //data on product update
         preModel.modelName = req.body.modelName ?? null;
         preModel.modelId = req.body.modelId ?? null;
-        if (req.body.data) {
-          preModel.data =
-            typeof req.body.data === 'string'
-              ? JSON.parse(req.body.data)
-              : req.body.data;
-        }
+
+        preModel.data =
+          typeof req.body.data === 'string'
+            ? JSON.parse(req.body.data)
+            : req.body.data;
 
         const model = await preModel.save();
 

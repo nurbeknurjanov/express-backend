@@ -42,9 +42,6 @@ schema.post('validate', async function (doc) {
       await File.findByIdAndUpdate(doc.image, {
         modelId: doc._id,
         modelName: 'Product',
-        data: {
-          type: 'image',
-        },
       });
     }
   } catch (err) {
