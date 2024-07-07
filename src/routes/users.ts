@@ -121,7 +121,10 @@ router.get(
       }
 
       const list = await cursor;
-      const count = await User.countDocuments();
+
+      const cursorCount = User.find({});
+      cursorCount.where(cursor.getFilter());
+      const count = await User.countDocuments(cursorCount);
 
       res.send({
         list,
