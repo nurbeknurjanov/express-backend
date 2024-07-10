@@ -20,6 +20,7 @@ type IFileWithout_id = Omit<IFile, '_id'>;
 export interface IFilePost extends IFileWithout_id {}
 export interface IFileFilter extends IFileWithout_id {
   id: string;
+  type: string;
 }
 export type IFileSortFields = keyof IFileWithout_id;
 export interface IFileSort extends ISort<IFileSortFields> {}

@@ -139,12 +139,15 @@ router.get(
       const cursor = File.find({});
       cursor.skip(pageNumber * pageSize).limit(pageSize);
 
-      const { modelName, id } = req.query;
+      const { modelName, id, type } = req.query;
       if (modelName) {
         cursor.where('modelName').equals(modelName);
       }
       if (id) {
         cursor.where('_id').equals(id);
+      }
+      if (type) {
+        cursor.where('data.type').equals(type);
       }
 
       const list = await cursor;
