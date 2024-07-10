@@ -136,28 +136,65 @@ router.get(
       const pageNumber = Number(req.query.pageNumber ?? 0);
       const pageSize = Number(req.query.pageSize ?? 12);
 
-      const cursor = File.find({});
-      cursor.populate('modelId', 'name');
+      const cursor = File.aggregate().lookup({
+        from: 'products',
+        foreignField: '_id',
+        localField: 'modelId',
+        as: 'foundProducts',
+        pipeline: [
+          /*{
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ['$stock_item', '$$order_item'] },
+                  { $gte: ['$instock', '$$order_qty'] },
+                ],
+              },
+            },
+          },*/
+          { $project: { name: 1 } },
+          //{ $group: { _id: null, countGames: { $sum: 1 } } },
+        ],
+      });
+
+      cursor.replaceRoot({
+        $mergeObjects: [
+          '$$ROOT',
+          { foundProduct: { $arrayElemAt: ['$foundProducts', 0] } },
+        ],
+        //newRoot: { $arrayElemAt: ['$foundProducts', 0] },
+        //$mergeObjects: [{ $arrayElemAt: ['$foundProducts', 0] }, '$$ROOT'],
+      });
+      cursor.project({ foundProducts: 0 });
+
       cursor.skip(pageNumber * pageSize).limit(pageSize);
 
-      const { modelName, id, type } = req.query;
+      const { modelName, modelSearch, id, type } = req.query;
       if (modelName) {
-        cursor.where('modelName').equals(modelName);
-      }
-      if (modelName) {
-        cursor.where('modelName').equals(modelName);
+        cursor.match({ modelName });
       }
       if (id) {
-        cursor.where('_id').equals(id);
+        cursor.match({
+          _id: new ObjectId(id),
+        });
       }
       if (type) {
-        cursor.where('data.type').equals(type);
+        cursor.match({ 'data.type': type });
+      }
+      if (modelSearch) {
+        cursor.match({
+          'foundProduct.name': {
+            $regex: '.*' + modelSearch + '.*',
+            $options: 'i',
+          },
+        });
       }
 
       const list = await cursor;
 
       const cursorCount = File.find({});
-      cursorCount.where(cursor.getFilter());
+      //console.log('cursor.pipeline()', cursor.);
+      //cursorCount.where(cursor.getFilter());
       const count = await File.countDocuments(cursorCount);
 
       res.send({

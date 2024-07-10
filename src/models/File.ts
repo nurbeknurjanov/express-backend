@@ -6,7 +6,7 @@ import fsPromise from 'node:fs/promises';
 export interface IFile {
   _id: Types.ObjectId;
   modelName: 'Product';
-  modelId: Types.ObjectId | IProduct;
+  modelId: Types.ObjectId;
   data: {
     type: 'image';
   };
@@ -14,15 +14,17 @@ export interface IFile {
   ext: string;
   originalFileName: string;
   url: string;
+  model: IProduct;
 }
 
-type IFileWithout_id = Omit<IFile, '_id'>;
-export interface IFilePost extends IFileWithout_id {}
-export interface IFileFilter extends IFileWithout_id {
+type IFileWithoutSystemFields = Omit<IFile, '_id'>;
+export interface IFilePost extends IFileWithoutSystemFields {}
+export interface IFileFilter extends IFileWithoutSystemFields {
   id: string;
   type: string;
+  modelSearch: string;
 }
-export type IFileSortFields = keyof IFileWithout_id;
+export type IFileSortFields = keyof IFileWithoutSystemFields;
 export interface IFileSort extends ISort<IFileSortFields> {}
 
 interface FileModel extends Model<IFile, {}> {}
@@ -61,7 +63,7 @@ const schema = new Schema<IFile, FileModel>(
         },
       },
       model: {
-        get(this: IFile): IProduct {
+        get(this: Omit<IFile, 'modelId'> & { modelId: IProduct }): IProduct {
           return this.modelId as IProduct;
         },
       },

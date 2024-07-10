@@ -9,12 +9,12 @@ export interface IProduct {
   image: Types.ObjectId;
 }
 
-type IProductWithout_id = Omit<IProduct, '_id'>;
-export interface IProductPost extends IProductWithout_id {}
-export interface IProductFilter extends IProductWithout_id {
+type IProductWithoutSystemFields = Omit<IProduct, '_id'>;
+export interface IProductPost extends IProductWithoutSystemFields {}
+export interface IProductFilter extends IProductWithoutSystemFields {
   id: string;
 }
-export type IProductSortFields = keyof IProductWithout_id;
+export type IProductSortFields = keyof IProductWithoutSystemFields;
 export interface IProductSort extends ISort<IProductSortFields> {}
 
 interface ProductModel extends Model<IProduct, IProduct> {}

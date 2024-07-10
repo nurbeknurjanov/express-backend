@@ -20,12 +20,12 @@ export interface IUser {
   sex: SEX;
   status: STATUS;
 }
-type IUserWithout_id = Omit<IUser, '_id'>;
-export interface IUserPost extends IUserWithout_id {}
-export interface IUserFilter extends IUserWithout_id {
+type IUserWithoutSystemFields = Omit<IUser, '_id'>;
+export interface IUserPost extends IUserWithoutSystemFields {}
+export interface IUserFilter extends IUserWithoutSystemFields {
   id: Types.ObjectId;
 }
-export type IUserSortFields = keyof IUserWithout_id;
+export type IUserSortFields = keyof IUserWithoutSystemFields;
 export interface IUserSort extends ISort<IUserSortFields> {}
 
 interface UserModel extends Model<IUser, IUser> {}

@@ -46,7 +46,13 @@ router.get(
   ) {
     try {
       const cursor = Product.find({});
-      cursor.populate('image', 'url data.type ext');
+      cursor.populate({
+        path: 'image',
+        select: 'url data.type ext',
+        /*match: {
+            name: { $eq: 'Avril Lavigne' },
+          },*/
+      });
 
       const pageNumber = Number(req.query.pageNumber ?? 0);
       const pageSize = Number(req.query.pageSize ?? 12);
@@ -105,10 +111,10 @@ router.get(
         return handleResponseError(res, new Error('Bad format id'));
       }
 
-      const model = await Product.findById(id).populate(
-        'image',
-        'url data.type ext'
-      );
+      const model = await Product.findById(id).populate({
+        path: 'image',
+        select: 'url data.type ext',
+      });
       if (!model) {
         return handleResponseError(res, new Error('Product not found'));
       }
