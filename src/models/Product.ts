@@ -6,9 +6,9 @@ export interface IProduct {
   _id: Types.ObjectId;
   name: string;
   description: string;
-  imageId: Types.ObjectId;
 
-  image: IFile;
+  imageId?: Types.ObjectId;
+  image?: IFile;
 }
 
 type IProductWithoutSystemFields = Omit<IProduct, '_id' | 'image'>;
@@ -25,6 +25,7 @@ const schema = new Schema<IProduct, ProductModel>(
   {
     name: String,
     description: String,
+
     imageId: {
       type: Schema.Types.ObjectId,
       ref: 'File',
