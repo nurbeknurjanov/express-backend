@@ -188,12 +188,13 @@ router.get(
         });
       }
 
-      //cursor.skip(pageNumber * pageSize).limit(pageSize);
-      const list = await cursor;
+      cursor.facet({
+        list: [{ $skip: pageNumber * pageSize }, { $limit: pageSize }],
+        totalCount: [{ $count: 'totalCount' }],
+      });
+      const [{ list, totalCount }] = await cursor;
 
-      const countResult = await cursor.count('total');
-      const count = countResult?.[0]?.total ?? 0;
-
+      const count = totalCount[0].totalCount;
       res.send({
         list,
         pagination: {
