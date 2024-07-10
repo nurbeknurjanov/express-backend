@@ -117,7 +117,7 @@ schema.pre('save', async function (next) {
       doc.data?.type
     ) {
       await Product.findByIdAndUpdate(doc.modelId, {
-        [doc.data.type]: doc._id,
+        imageId: doc._id,
       });
       return next();
     }
