@@ -144,6 +144,9 @@ router.get(
       if (modelName) {
         cursor.where('modelName').equals(modelName);
       }
+      if (modelName) {
+        cursor.where('modelName').equals(modelName);
+      }
       if (id) {
         cursor.where('_id').equals(id);
       }
