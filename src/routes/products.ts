@@ -46,7 +46,7 @@ router.get(
   ) {
     try {
       const cursor = Product.find({});
-      cursor.populate('image', 'url data.type');
+      cursor.populate('image', 'url data.type ext');
 
       const pageNumber = Number(req.query.pageNumber ?? 0);
       const pageSize = Number(req.query.pageSize ?? 12);
