@@ -13,11 +13,12 @@ export interface IFile {
 
   ext: string;
   originalFileName: string;
+
   url: string;
   model: IProduct;
 }
 
-type IFileWithoutSystemFields = Omit<IFile, '_id'>;
+type IFileWithoutSystemFields = Omit<IFile, '_id' | 'url' | 'model'>;
 export interface IFilePost extends IFileWithoutSystemFields {}
 export interface IFileFilter extends IFileWithoutSystemFields {
   id: string;
@@ -64,7 +65,7 @@ const schema = new Schema<IFile, FileModel>(
       },
       model: {
         get(this: Omit<IFile, 'modelId'> & { modelId: IProduct }): IProduct {
-          return this.modelId as IProduct;
+          return this.modelId;
         },
       },
     },

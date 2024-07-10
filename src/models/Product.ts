@@ -1,15 +1,17 @@
 import mongoose, { Schema, Model, Types } from 'mongoose';
 import { ISort } from './types';
-import { File } from './File';
+import { File, IFile } from './File';
 
 export interface IProduct {
   _id: Types.ObjectId;
   name: string;
   description: string;
-  image: Types.ObjectId;
+  imageId: Types.ObjectId;
+
+  image: IFile;
 }
 
-type IProductWithoutSystemFields = Omit<IProduct, '_id'>;
+type IProductWithoutSystemFields = Omit<IProduct, '_id' | 'image'>;
 export interface IProductPost extends IProductWithoutSystemFields {}
 export interface IProductFilter extends IProductWithoutSystemFields {
   id: string;
@@ -23,13 +25,23 @@ const schema = new Schema<IProduct, ProductModel>(
   {
     name: String,
     description: String,
-    image: {
+    imageId: {
       type: Schema.Types.ObjectId,
       ref: 'File',
     },
   },
   {
     timestamps: true,
+    toJSON: {
+      virtuals: true,
+    },
+    virtuals: {
+      image: {
+        get(this: Omit<IProduct, 'imageId'> & { imageId: IFile }): IFile {
+          return this.imageId;
+        },
+      },
+    },
   }
 );
 
@@ -37,8 +49,8 @@ const schema = new Schema<IProduct, ProductModel>(
 schema.post('validate', async function (doc) {
   try {
     //doc.image is string, the ID of first created File
-    if (doc.isNew && doc.image) {
-      await File.findByIdAndUpdate(doc.image, {
+    if (doc.isNew && doc.imageId) {
+      await File.findByIdAndUpdate(doc.imageId, {
         modelId: doc._id,
         modelName: 'Product',
       });
@@ -59,8 +71,8 @@ schema.pre(
     const doc = this;
 
     try {
-      if (doc.image) {
-        const fileModel = await File.findById(doc.image);
+      if (doc.imageId) {
+        const fileModel = await File.findById(doc.imageId);
         if (fileModel) {
           await fileModel.deleteOne();
         }

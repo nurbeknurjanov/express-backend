@@ -47,7 +47,7 @@ router.get(
     try {
       const cursor = Product.find({});
       cursor.populate({
-        path: 'image',
+        path: 'imageId',
         select: 'url data.type ext',
         /*match: {
             name: { $eq: 'Avril Lavigne' },
@@ -112,7 +112,7 @@ router.get(
       }
 
       const model = await Product.findById(id).populate({
-        path: 'image',
+        path: 'imageId',
         select: 'url data.type ext',
       });
       if (!model) {
