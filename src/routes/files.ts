@@ -194,7 +194,7 @@ router.get(
       });
       const [{ list, totalCount }] = await cursor;
 
-      const count = totalCount[0].totalCount;
+      const count = totalCount[0]?.totalCount ?? 0;
       res.send({
         list,
         pagination: {
