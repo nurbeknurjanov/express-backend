@@ -154,6 +154,11 @@ router.get(
           },*/
           { $project: { name: 1 } },
           //{ $group: { _id: null, countGames: { $sum: 1 } } },
+          /*{
+            $addFields: {
+              qwe: '$_id',
+            },
+          },*/
         ],
       });
 
@@ -196,7 +201,12 @@ router.get(
 
       const count = totalCount[0]?.totalCount ?? 0;
       res.send({
-        list,
+        list: list.map((doc: IFile) => ({
+          ...doc,
+          url: File.hydrate(doc).url,
+          //@ts-ignore
+          model: doc.foundProduct,
+        })),
         pagination: {
           pageNumber,
           pageSize,
