@@ -86,10 +86,10 @@ schema.pre(
     const doc = this;
 
     try {
-      if (doc.modelId && doc.modelName === 'Product' && doc.data?.type) {
+      if (doc.modelId && doc.modelName === 'Product') {
         await Product.findByIdAndUpdate(doc.modelId, {
           //[deletedModel!.data.type]: null,
-          $unset: { [doc.data.type]: 1 },
+          $unset: { imageId: 1 },
         });
       }
 
@@ -110,12 +110,7 @@ schema.pre(
 schema.pre('save', async function (next) {
   const doc = this;
   try {
-    if (
-      doc.isNew &&
-      doc.modelName === 'Product' &&
-      doc.modelId &&
-      doc.data?.type
-    ) {
+    if (doc.isNew && doc.modelName === 'Product' && doc.modelId) {
       await Product.findByIdAndUpdate(doc.modelId, {
         imageId: doc._id,
       });
