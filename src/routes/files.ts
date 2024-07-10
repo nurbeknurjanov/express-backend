@@ -137,6 +137,7 @@ router.get(
       const pageSize = Number(req.query.pageSize ?? 12);
 
       const cursor = File.find({});
+      cursor.populate('modelId', 'name');
       cursor.skip(pageNumber * pageSize).limit(pageSize);
 
       const { modelName, id, type } = req.query;

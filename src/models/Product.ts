@@ -1,10 +1,9 @@
 import mongoose, { Schema, Model, Types } from 'mongoose';
 import { ISort } from './types';
 import { File } from './File';
-import fsPromise from 'node:fs/promises';
 
 export interface IProduct {
-  _id: string;
+  _id: Types.ObjectId;
   name: string;
   description: string;
   image: Types.ObjectId;

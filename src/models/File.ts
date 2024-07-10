@@ -1,12 +1,12 @@
 import mongoose, { Schema, Types, Model } from 'mongoose';
 import { ISort } from './types';
-import { Product } from './Product';
+import { Product, IProduct } from './Product';
 import fsPromise from 'node:fs/promises';
 
 export interface IFile {
-  _id: string;
+  _id: Types.ObjectId;
   modelName: 'Product';
-  modelId: Types.ObjectId;
+  modelId: Types.ObjectId | IProduct;
   data: {
     type: 'image';
   };
@@ -30,7 +30,10 @@ interface FileModel extends Model<IFile, {}> {}
 const schema = new Schema<IFile, FileModel>(
   {
     modelName: String,
-    modelId: Schema.Types.ObjectId,
+    modelId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Product',
+    },
     data: {
       type: {
         type: String,
@@ -55,6 +58,11 @@ const schema = new Schema<IFile, FileModel>(
           }
 
           return `${process.env.AWS_URL}/${this._id}`;
+        },
+      },
+      model: {
+        get(this: IFile): IProduct {
+          return this.modelId as IProduct;
         },
       },
     },

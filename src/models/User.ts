@@ -1,4 +1,4 @@
-import mongoose, { Schema, Model } from 'mongoose';
+import mongoose, { Schema, Model, Types } from 'mongoose';
 import { ISort } from './types';
 
 export enum SEX {
@@ -23,7 +23,7 @@ export interface IUser {
 type IUserWithout_id = Omit<IUser, '_id'>;
 export interface IUserPost extends IUserWithout_id {}
 export interface IUserFilter extends IUserWithout_id {
-  id: string;
+  id: Types.ObjectId;
 }
 export type IUserSortFields = keyof IUserWithout_id;
 export interface IUserSort extends ISort<IUserSortFields> {}
