@@ -167,8 +167,6 @@ router.get(
       });
       cursor.project({ foundProducts: 0 });
 
-      cursor.skip(pageNumber * pageSize).limit(pageSize);
-
       const { modelName, modelSearch, id, type } = req.query;
       if (modelName) {
         cursor.match({ modelName });
@@ -190,12 +188,11 @@ router.get(
         });
       }
 
+      //cursor.skip(pageNumber * pageSize).limit(pageSize);
       const list = await cursor;
 
-      const cursorCount = File.find({});
-      //console.log('cursor.pipeline()', cursor.);
-      //cursorCount.where(cursor.getFilter());
-      const count = await File.countDocuments(cursorCount);
+      const countResult = await cursor.count('total');
+      const count = countResult?.[0]?.total ?? 0;
 
       res.send({
         list,
