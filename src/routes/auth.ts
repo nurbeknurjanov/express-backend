@@ -19,8 +19,8 @@ router
           type: 'accessToken',
           user: payload.user,
         },
-        10000 * 10 * 60 * 1000
-      ); //10 min
+        1 * 60 * 1000
+      ); //1 min
 
       res.send(accessToken);
     } catch (e) {
@@ -76,7 +76,7 @@ router.post(
         type: 'accessToken',
         user,
       },
-      60 * 1000
+      1 * 60 * 1000
     ); //1 minute
 
     return res.send({ refreshToken, accessToken });
