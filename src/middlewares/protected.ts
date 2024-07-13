@@ -33,8 +33,6 @@ export const isAuthorized = function (
   res: Response,
   next: NextFunction
 ) {
-  return next();
-
   const { authorization, cookie: _cookieString } = req.headers;
   const _accessToken = authorization?.replace('Bearer ', '');
 

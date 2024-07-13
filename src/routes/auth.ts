@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
-import { isAuthorized, isGuest, hasRefreshToken } from '../middlewares';
+import { hasRefreshToken } from '../middlewares';
 import { JWT } from '../helpers/JWT';
 import { User } from '../models';
 
@@ -26,18 +26,6 @@ router
     } catch (e) {
       res.status(401).send('Token is wrong');
     }
-  });
-
-router
-  .use('/user', isAuthorized)
-  .get('/user', function (req: Request<{}, {}, {}, {}>, res) {
-    res.json('Welcome user');
-  });
-
-router
-  .use('/guest', isGuest)
-  .get('/guest', function (req: Request<{}, {}, {}, {}>, res) {
-    res.json('Welcome guest');
   });
 
 router.post(

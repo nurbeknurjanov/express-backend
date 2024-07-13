@@ -1,2 +1,1 @@
-export * from './guest'
-export * from './protected'
+export * from './protected';
