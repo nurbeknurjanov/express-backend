@@ -56,6 +56,7 @@ router.post(
     next: NextFunction
   ) {
     const cursor = User.findOne({ email: req.body.email });
+    cursor.select('-password');
     cursor.where('password').equals(req.body.password);
     const user = await cursor;
     if (!user) {

@@ -85,6 +85,7 @@ router.get(
   ) {
     try {
       const cursor = User.find({});
+      cursor.select('-password');
 
       const pageNumber = Number(req.query.pageNumber ?? 0);
       const pageSize = Number(req.query.pageSize ?? 12);
