@@ -15,7 +15,7 @@ export const hasRefreshToken = function (
         return res.status(401).end(payload.type + ' is expired');
       }
 
-      if (payload.type === 'refresh-token') {
+      if (payload.type === 'refreshToken') {
         return next();
       }
     }
@@ -47,7 +47,7 @@ export const isAuthorized = function (
         return res.status(401).end(payload.type + ' is expired');
       }
 
-      if (payload.type === 'access-token') {
+      if (payload.type === 'accessToken') {
         return next();
       }
     }

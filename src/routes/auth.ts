@@ -16,7 +16,7 @@ router
       const payload = JWT.parseToken(refreshToken);
       const accessToken = JWT.generateToken(
         {
-          type: 'access-token',
+          type: 'accessToken',
           user: payload.user,
         },
         10000 * 10 * 60 * 1000
@@ -65,7 +65,7 @@ router.post(
 
     const refreshToken = JWT.generateToken(
       {
-        type: 'refresh-token',
+        type: 'refreshToken',
         user,
       },
       7 * 24 * 60 * 60 * 1000
