@@ -45,7 +45,7 @@ router.post(
   async function (
     req: Request<
       {},
-      string,
+      { refreshToken: string; accessToken: string },
       {
         email: string;
         password: string;
@@ -71,7 +71,15 @@ router.post(
       7 * 24 * 60 * 60 * 1000
     ); //week
 
-    res.send(refreshToken);
+    const accessToken = JWT.generateToken(
+      {
+        type: 'accessToken',
+        user,
+      },
+      60 * 1000
+    ); //1 minute
+
+    return res.send({ refreshToken, accessToken });
   }
 );
 
