@@ -1,13 +1,13 @@
 import jwt from 'jsonwebtoken';
 import { IUser } from '../models';
 
-export interface IPayload {
+interface IPayload {
   user: IUser;
   expire: string;
   type: 'refresh-token' | 'access-token';
 }
 
-export const secret_key: string = 'secret_key';
+const secret_key: string = 'secret_key';
 
 export class JWT {
   static parseToken(token: string): IPayload {

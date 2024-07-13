@@ -59,7 +59,7 @@ router.post(
     cursor.where('password').equals(req.body.password);
     const user = await cursor;
     if (!user) {
-      return res.status(404).send('Not found');
+      return res.status(404).send('The credential are wrong');
     }
 
     const refreshToken = JWT.generateToken(
