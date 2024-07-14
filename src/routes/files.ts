@@ -178,7 +178,7 @@ router.get(
       }
       if (id) {
         cursor.match({
-          _id: new ObjectId(id),
+          _id: ObjectId.isValid(id) ? new ObjectId(id) : id,
         });
       }
       if (type) {
