@@ -18,9 +18,7 @@ export const hasRefreshToken = function (
       return res.status(403).end(payload.type + ' is expired');
     }
 
-    if (payload.type === 'refreshToken') {
-      return next();
-    }
+    return next();
   } catch (e) {
     res.status(403).end('Refresh token is wrong');
   }
@@ -49,9 +47,7 @@ export const isAuthorized = function (
       return res.status(401).end(payload.type + ' is expired');
     }
 
-    if (payload.type === 'accessToken') {
-      return next();
-    }
+    return next();
   } catch (e) {
     res.status(401).end('Access token is wrong');
   }
