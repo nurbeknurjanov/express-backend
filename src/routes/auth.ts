@@ -12,6 +12,9 @@ router
     const _accessToken = authorization?.replace('Bearer ', '');
     const { refreshToken } = req.cookies;
 
+    if (!refreshToken) {
+      res.status(401).send('Refresh token is missing');
+    }
     try {
       const payload = JWT.parseToken(refreshToken);
       const accessToken = JWT.generateToken(
@@ -19,12 +22,13 @@ router
           type: 'accessToken',
           user: payload.user,
         },
-        1 * 60 * 1000
+        10 * 1000
       ); //1 min
 
       res.send(accessToken);
     } catch (e) {
-      res.status(401).send('Token is wrong');
+      console.log('e', (e as Error).message);
+      res.status(401).send('Refresh token is wrong');
     }
   });
 
@@ -64,7 +68,7 @@ router.post(
         type: 'accessToken',
         user,
       },
-      1 * 60 * 1000
+      10 * 1000
     ); //1 minute
 
     return res.send({ refreshToken, accessToken });
