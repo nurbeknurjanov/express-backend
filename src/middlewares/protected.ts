@@ -8,22 +8,23 @@ export const hasRefreshToken = function (
 ) {
   const { refreshToken } = req.cookies;
 
-  try {
-    if (refreshToken) {
-      const payload = JWT.parseToken(refreshToken);
-      if (new Date(payload.expire).getTime() < new Date().getTime()) {
-        return res.status(401).end(payload.type + ' is expired');
-      }
-
-      if (payload.type === 'refreshToken') {
-        return next();
-      }
-    }
-  } catch (e) {
-    res.status(401).end('Token is wrong');
+  if (!refreshToken) {
+    res.status(401).send('Refresh token is missing');
   }
 
-  return res.status(401).end('Not authorized');
+  try {
+    const payload = JWT.parseToken(refreshToken);
+    if (new Date(payload.expire).getTime() < new Date().getTime()) {
+      return res.status(401).end(payload.type + ' is expired');
+    }
+
+    if (payload.type === 'refreshToken') {
+      return next();
+    }
+  } catch (e) {
+    res.status(403).end('Refresh token is wrong');
+  }
+
   //res.status(403).end('Forbidden')
   //res.redirect('/error');
 };
@@ -38,23 +39,24 @@ export const isAuthorized = function (
 
   const { accessToken } = req.cookies;
 
-  try {
-    if (accessToken) {
-      const payload = JWT.parseToken(accessToken);
-      if (new Date(payload.expire).getTime() < new Date().getTime()) {
-        return res.status(401).end(payload.type + ' is expired');
-      }
+  if (!accessToken) {
+    res.status(401).send('Access token is missing');
+  }
 
-      if (payload.type === 'accessToken') {
-        return next();
-      }
+  try {
+    const payload = JWT.parseToken(accessToken);
+    if (new Date(payload.expire).getTime() < new Date().getTime()) {
+      return res.status(401).end(payload.type + ' is expired');
+    }
+
+    if (payload.type === 'accessToken') {
+      return next();
     }
   } catch (e) {
-    res.status(401).end('Token is wrong');
+    res.status(401).end('Access token is wrong');
   }
 
   //throw new Error('Not authorized')
-  return res.status(401).send('Not authorized');
   /*return res.status(401).send({
         code: 4001,
         message: 'This is an error!',

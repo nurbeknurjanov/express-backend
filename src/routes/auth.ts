@@ -12,9 +12,6 @@ router
     const _accessToken = authorization?.replace('Bearer ', '');
     const { refreshToken } = req.cookies;
 
-    if (!refreshToken) {
-      res.status(401).send('Refresh token is missing');
-    }
     try {
       const payload = JWT.parseToken(refreshToken);
       const accessToken = JWT.generateToken(
