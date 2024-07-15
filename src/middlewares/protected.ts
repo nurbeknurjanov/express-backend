@@ -15,12 +15,12 @@ export const hasRefreshToken = function (
   try {
     const payload = JWT.parseToken(refreshToken);
     if (new Date(payload.expire).getTime() < new Date().getTime()) {
-      return res.status(403).end(payload.type + ' is expired');
+      return res.status(403).send(payload.type + ' is expired');
     }
 
     return next();
   } catch (e) {
-    res.status(403).end('Refresh token is wrong');
+    return res.status(403).send('Refresh token is wrong');
   }
 
   //res.status(403).end('Forbidden')
@@ -44,12 +44,13 @@ export const isAuthorized = function (
   try {
     const payload = JWT.parseToken(accessToken);
     if (new Date(payload.expire).getTime() < new Date().getTime()) {
-      return res.status(401).end(payload.type + ' is expired');
+      return res.status(401).send(payload.type + ' is expired');
     }
 
     return next();
   } catch (e) {
-    res.status(401).end('Access token is wrong');
+    //res.status(401).end('Access token is wrong');
+    return res.status(401).send('Access token is wrong');
   }
 
   //throw new Error('Not authorized')
