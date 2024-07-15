@@ -9,7 +9,7 @@ export const hasRefreshToken = function (
   const { refreshToken } = req.cookies;
 
   if (!refreshToken) {
-    res.status(403).send('Refresh token is missing');
+    return res.status(403).send('Refresh token is missing');
   }
 
   try {
@@ -38,7 +38,7 @@ export const isAuthorized = function (
   const { accessToken } = req.cookies;
 
   if (!accessToken) {
-    res.status(401).send('Access token is missing');
+    return res.status(401).send('Access token is missing');
   }
 
   try {
@@ -49,7 +49,6 @@ export const isAuthorized = function (
 
     return next();
   } catch (e) {
-    //res.status(401).end('Access token is wrong');
     return res.status(401).send('Access token is wrong');
   }
 
