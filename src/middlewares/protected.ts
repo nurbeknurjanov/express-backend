@@ -9,13 +9,13 @@ export const hasRefreshToken = function (
   const { refreshToken } = req.cookies;
 
   if (!refreshToken) {
-    res.status(401).send('Refresh token is missing');
+    res.status(403).send('Refresh token is missing');
   }
 
   try {
     const payload = JWT.parseToken(refreshToken);
     if (new Date(payload.expire).getTime() < new Date().getTime()) {
-      return res.status(401).end(payload.type + ' is expired');
+      return res.status(403).end(payload.type + ' is expired');
     }
 
     if (payload.type === 'refreshToken') {

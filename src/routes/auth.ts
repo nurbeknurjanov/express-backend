@@ -24,7 +24,7 @@ router
 
       res.send(accessToken);
     } catch (e) {
-      console.log('e', (e as Error).message);
+      console.log('Error on getting new access token', (e as Error).message);
       res.status(401).send('Refresh token is wrong');
     }
   });
