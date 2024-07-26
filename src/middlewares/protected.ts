@@ -9,7 +9,7 @@ export const hasRefreshToken = function (
   const { refreshToken } = req.cookies;
 
   if (!refreshToken) {
-    return res.status(403).send('Refresh token is missing');
+    return res.status(403).send({ message: 'Refresh token is missing' });
   }
 
   try {
@@ -20,7 +20,7 @@ export const hasRefreshToken = function (
 
     return next();
   } catch (e) {
-    return res.status(403).send('Refresh token is wrong');
+    return res.status(403).send({ message: 'Refresh token is wrong' });
   }
 
   //res.status(403).end('Forbidden')

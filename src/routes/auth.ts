@@ -25,7 +25,7 @@ router
       res.send(accessToken);
     } catch (e) {
       console.log('Error on getting new access token', (e as Error).message);
-      res.status(401).send('Refresh token is wrong');
+      res.status(401).send({ message: 'Refresh token is wrong' });
     }
   });
 
@@ -49,7 +49,7 @@ router.post(
     cursor.where('password').equals(req.body.password);
     const user = await cursor;
     if (!user) {
-      return res.status(404).send('The credential are wrong');
+      return res.status(404).send({ message: 'The credential are wrong' });
     }
 
     const refreshToken = JWT.generateToken(
