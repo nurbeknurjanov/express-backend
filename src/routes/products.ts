@@ -66,7 +66,9 @@ router.get(
 
       const { id, name, description } = req.query;
       if (id) {
-        cursor.where('_id').equals(id);
+        cursor
+          .where('_id')
+          .equals(ObjectId.isValid(id) ? new ObjectId(id) : id);
       }
       if (name) {
         cursor

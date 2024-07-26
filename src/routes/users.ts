@@ -192,10 +192,43 @@ router.put(
         return handleResponseError(res, new Error('Bad format id'));
       }
 
+      const existEmailUser = await User.findOne({
+        email: req.body.email,
+        _id: { $ne: id },
+      });
+
+      if (existEmailUser) {
+        return handleResponseError(
+          res,
+          new Error('User with this email exists')
+        );
+      }
+
       await User.findByIdAndUpdate(
         id,
         pick(req.body, ['name', 'email', 'age', 'sex', 'status'])
       );
+
+      const model = await User.findById(id);
+      res.send(model!);
+    } catch (error) {
+      if (error instanceof Error) {
+        handleResponseError(res, error);
+      }
+    }
+  }
+);
+
+router.put(
+  '/:id/change-password',
+  async function (req: Request<{ id: string }, IUser, IUserPost, never>, res) {
+    try {
+      const id = req.params.id;
+      if (!ObjectId.isValid(id)) {
+        return handleResponseError(res, new Error('Bad format id'));
+      }
+
+      await User.findByIdAndUpdate(id, pick(req.body, ['password']));
 
       const model = await User.findById(id);
       res.send(model!);
