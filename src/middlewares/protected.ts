@@ -38,7 +38,7 @@ export const isAuthorized = function (
   const { accessToken } = req.cookies;
 
   if (!accessToken) {
-    return res.status(401).send('Access token is missing');
+    return res.status(401).send({ message: 'You are not authorized' });
   }
 
   try {
@@ -49,7 +49,7 @@ export const isAuthorized = function (
 
     return next();
   } catch (e) {
-    return res.status(401).send('Access token is wrong');
+    return res.status(401).send('Forbidden');
   }
 
   //throw new Error('Not authorized')
