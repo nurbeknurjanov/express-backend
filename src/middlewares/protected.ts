@@ -60,3 +60,19 @@ export const isAuthorized = function (
   //res.status(403).end('Forbidden')
   //res.redirect('/error');
 };
+
+export const isAuthorizedOwn = function (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  if (
+    req.method === 'POST' ||
+    req.method === 'PUT' ||
+    req.method === 'DELETE'
+  ) {
+    return isAuthorized(req, res, next);
+  }
+
+  return next();
+};

@@ -10,7 +10,7 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import './db/mongoose';
-import { isAuthorized } from './middlewares';
+import { isAuthorized, isAuthorizedOwn } from './middlewares';
 
 const app = express();
 
@@ -45,7 +45,7 @@ app.get('/about', (_, res) => {
 });
 
 app.use('/auth', authRoute);
-app.use('/products', productsRoute);
+app.use('/products', isAuthorizedOwn).use('/products', productsRoute);
 app.use('/files', isAuthorized).use('/files', filesRoute);
 app.use('/users', isAuthorized).use('/users', usersRoute);
 

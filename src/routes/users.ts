@@ -194,6 +194,37 @@ router.post(
 );
 
 router.put(
+  '/profile',
+  async function (req: Request<never, IUser, IUserPost, never>, res) {
+    try {
+      const id = 'req.params.id';
+
+      const existEmailUser = await User.findOne({
+        email: req.body.email,
+        _id: { $ne: id },
+      });
+      if (existEmailUser) {
+        return handleResponseFieldsError(res, {
+          email: 'User with this email exists',
+        });
+      }
+
+      await User.findByIdAndUpdate(
+        id,
+        pick(req.body, ['name', 'email', 'age', 'sex', 'status'])
+      );
+
+      const model = await User.findById(id);
+      res.send(model!);
+    } catch (error) {
+      if (error instanceof Error) {
+        handleResponseError(res, error);
+      }
+    }
+  }
+);
+
+router.put(
   '/:id',
   async function (req: Request<{ id: string }, IUser, IUserPost, never>, res) {
     try {
