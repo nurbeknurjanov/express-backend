@@ -12,6 +12,7 @@ import {
   IPagination,
 } from '../models';
 import { ObjectId } from 'mongodb';
+import { pick } from 'lodash';
 
 const router = express.Router();
 
@@ -191,7 +192,10 @@ router.put(
         return handleResponseError(res, new Error('Bad format id'));
       }
 
-      await User.findByIdAndUpdate(id, req.body);
+      await User.findByIdAndUpdate(
+        id,
+        pick(req.body, ['name', 'email', 'age', 'sex', 'status'])
+      );
 
       const model = await User.findById(id);
       res.send(model!);
