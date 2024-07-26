@@ -15,7 +15,7 @@ export const hasRefreshToken = function (
   try {
     const payload = JWT.parseToken(refreshToken);
     if (new Date(payload.expire).getTime() < new Date().getTime()) {
-      return res.status(403).send(payload.type + ' is expired');
+      return res.status(403).send({ message: payload.type + ' is expired' });
     }
 
     return next();
@@ -44,12 +44,12 @@ export const isAuthorized = function (
   try {
     const payload = JWT.parseToken(accessToken);
     if (new Date(payload.expire).getTime() < new Date().getTime()) {
-      return res.status(401).send(payload.type + ' is expired');
+      return res.status(401).send({ message: payload.type + ' is expired' });
     }
 
     return next();
   } catch (e) {
-    return res.status(401).send('Forbidden');
+    return res.status(401).send({ message: 'Forbidden' });
   }
 
   //throw new Error('Not authorized')
