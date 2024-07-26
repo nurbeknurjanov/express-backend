@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { handleResponseError } from '../helpers';
+import { handleResponseError, handleResponseFieldsError } from '../helpers';
 import {
   User,
   IUser,
@@ -173,6 +173,16 @@ router.post(
   async function (req: Request<never, IUser, IUserPost, never>, res) {
     try {
       const preModel = new User(req.body);
+
+      const existEmailUser = await User.findOne({
+        email: req.body.email,
+      });
+      if (existEmailUser) {
+        return handleResponseFieldsError(res, {
+          email: 'User with this email exists',
+        });
+      }
+
       const model = await preModel.save();
       res.send(model);
     } catch (error) {
@@ -196,12 +206,10 @@ router.put(
         email: req.body.email,
         _id: { $ne: id },
       });
-
       if (existEmailUser) {
-        return handleResponseError(
-          res,
-          new Error('User with this email exists')
-        );
+        return handleResponseFieldsError(res, {
+          email: 'User with this email exists',
+        });
       }
 
       await User.findByIdAndUpdate(
