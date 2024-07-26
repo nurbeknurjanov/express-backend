@@ -1,5 +1,9 @@
 import express, { Request, Response } from 'express';
-import { handleResponseError, handleResponseFieldsError } from '../helpers';
+import {
+  handleResponseError,
+  handleResponseFieldsError,
+  JWT,
+} from '../helpers';
 import {
   User,
   IUser,
@@ -197,7 +201,9 @@ router.put(
   '/profile',
   async function (req: Request<never, IUser, IUserPost, never>, res) {
     try {
-      const id = 'req.params.id';
+      const { accessToken } = req.cookies;
+      const payload = JWT.parseToken(accessToken);
+      const id = payload.user._id;
 
       const existEmailUser = await User.findOne({
         email: req.body.email,
@@ -266,6 +272,26 @@ router.put(
       if (!ObjectId.isValid(id)) {
         return handleResponseError(res, new Error('Bad format id'));
       }
+
+      await User.findByIdAndUpdate(id, pick(req.body, ['password']));
+
+      const model = await User.findById(id);
+      res.send(model!);
+    } catch (error) {
+      if (error instanceof Error) {
+        handleResponseError(res, error);
+      }
+    }
+  }
+);
+
+router.put(
+  '/profile/change-password',
+  async function (req: Request<never, IUser, IUserPost, never>, res) {
+    try {
+      const { accessToken } = req.cookies;
+      const payload = JWT.parseToken(accessToken);
+      const id = payload.user._id;
 
       await User.findByIdAndUpdate(id, pick(req.body, ['password']));
 
