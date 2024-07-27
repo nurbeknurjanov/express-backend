@@ -77,6 +77,80 @@ router.get(
   }
 );
 
+router.put(
+  '/profile/change-password',
+  async function (req: Request<never, IUser, IUserPost, never>, res) {
+    try {
+      const { accessToken } = req.cookies;
+      const payload = JWT.parseToken(accessToken);
+      const id = payload.user._id;
+
+      await User.findByIdAndUpdate(id, pick(req.body, ['password']));
+
+      const model = await User.findById(id);
+      res.send(model!);
+    } catch (error) {
+      if (error instanceof Error) {
+        handleResponseError(res, error);
+      }
+    }
+  }
+);
+
+router.put(
+  '/profile',
+  async function (req: Request<never, IUser, IUserPost, never>, res) {
+    try {
+      const { accessToken } = req.cookies;
+      const payload = JWT.parseToken(accessToken);
+      const id = payload.user._id;
+
+      const existEmailUser = await User.findOne({
+        email: req.body.email,
+        _id: { $ne: id },
+      });
+      if (existEmailUser) {
+        return handleResponseFieldsError(res, {
+          email: 'User with this email exists',
+        });
+      }
+
+      await User.findByIdAndUpdate(
+        id,
+        pick(req.body, ['name', 'email', 'age', 'sex', 'status'])
+      );
+
+      const model = await User.findById(id);
+      res.send(model!);
+    } catch (error) {
+      if (error instanceof Error) {
+        handleResponseError(res, error);
+      }
+    }
+  }
+);
+
+router.put(
+  '/:id/change-password',
+  async function (req: Request<{ id: string }, IUser, IUserPost, never>, res) {
+    try {
+      const id = req.params.id;
+      if (!ObjectId.isValid(id)) {
+        return handleResponseError(res, new Error('Bad format id'));
+      }
+
+      await User.findByIdAndUpdate(id, pick(req.body, ['password']));
+
+      const model = await User.findById(id);
+      res.send(model!);
+    } catch (error) {
+      if (error instanceof Error) {
+        handleResponseError(res, error);
+      }
+    }
+  }
+);
+
 router.get(
   '/',
   async function (
@@ -198,39 +272,6 @@ router.post(
 );
 
 router.put(
-  '/profile',
-  async function (req: Request<never, IUser, IUserPost, never>, res) {
-    try {
-      const { accessToken } = req.cookies;
-      const payload = JWT.parseToken(accessToken);
-      const id = payload.user._id;
-
-      const existEmailUser = await User.findOne({
-        email: req.body.email,
-        _id: { $ne: id },
-      });
-      if (existEmailUser) {
-        return handleResponseFieldsError(res, {
-          email: 'User with this email exists',
-        });
-      }
-
-      await User.findByIdAndUpdate(
-        id,
-        pick(req.body, ['name', 'email', 'age', 'sex', 'status'])
-      );
-
-      const model = await User.findById(id);
-      res.send(model!);
-    } catch (error) {
-      if (error instanceof Error) {
-        handleResponseError(res, error);
-      }
-    }
-  }
-);
-
-router.put(
   '/:id',
   async function (req: Request<{ id: string }, IUser, IUserPost, never>, res) {
     try {
@@ -253,47 +294,6 @@ router.put(
         id,
         pick(req.body, ['name', 'email', 'age', 'sex', 'status'])
       );
-
-      const model = await User.findById(id);
-      res.send(model!);
-    } catch (error) {
-      if (error instanceof Error) {
-        handleResponseError(res, error);
-      }
-    }
-  }
-);
-
-router.put(
-  '/:id/change-password',
-  async function (req: Request<{ id: string }, IUser, IUserPost, never>, res) {
-    try {
-      const id = req.params.id;
-      if (!ObjectId.isValid(id)) {
-        return handleResponseError(res, new Error('Bad format id'));
-      }
-
-      await User.findByIdAndUpdate(id, pick(req.body, ['password']));
-
-      const model = await User.findById(id);
-      res.send(model!);
-    } catch (error) {
-      if (error instanceof Error) {
-        handleResponseError(res, error);
-      }
-    }
-  }
-);
-
-router.put(
-  '/profile/change-password',
-  async function (req: Request<never, IUser, IUserPost, never>, res) {
-    try {
-      const { accessToken } = req.cookies;
-      const payload = JWT.parseToken(accessToken);
-      const id = payload.user._id;
-
-      await User.findByIdAndUpdate(id, pick(req.body, ['password']));
 
       const model = await User.findById(id);
       res.send(model!);
