@@ -2,22 +2,24 @@ import express, { Request, Response, NextFunction } from 'express';
 import { hasRefreshToken } from '../middlewares';
 import { JWT } from '../helpers/JWT';
 import { User } from '../models';
+import { pick } from 'lodash';
 
 const router = express.Router();
 
 router
   .use('/get-access-token', hasRefreshToken)
-  .get('/get-access-token', function (req: Request<{}, {}, {}, {}>, res) {
+  .get('/get-access-token', async function (req: Request<{}, {}, {}, {}>, res) {
     const { authorization, cookie: _cookieString } = req.headers;
     const _accessToken = authorization?.replace('Bearer ', '');
     const { refreshToken } = req.cookies;
 
     try {
       const payload = JWT.parseToken(refreshToken);
+      const user = await User.findById(payload.user._id);
       const accessToken = JWT.generateToken(
         {
           type: 'accessToken',
-          user: payload.user,
+          user: user!,
         },
         60 * 1000
       ); //1 min
