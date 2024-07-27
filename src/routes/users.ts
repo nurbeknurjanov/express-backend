@@ -16,7 +16,7 @@ import {
   IPagination,
 } from '../models';
 import { ObjectId } from 'mongodb';
-import { pick, omit } from 'lodash';
+import { pick } from 'lodash';
 
 const router = express.Router();
 
@@ -90,8 +90,8 @@ router.put(
 
       await User.findByIdAndUpdate(id, pick(req.body, ['password']));
 
-      const model = await User.findById(id);
-      res.send(omit(model, 'password'));
+      const model = await User.findById(id, { password: 0 });
+      res.send(model!);
     } catch (error) {
       if (error instanceof Error) {
         handleResponseError(res, error);
@@ -126,8 +126,8 @@ router.put(
         pick(req.body, ['name', 'email', 'age', 'sex', 'status'])
       );
 
-      const model = await User.findById(id);
-      res.send(omit(model, 'password'));
+      const model = await User.findById(id, { password: 0 });
+      res.send(model!);
     } catch (error) {
       if (error instanceof Error) {
         handleResponseError(res, error);
@@ -150,8 +150,8 @@ router.put(
 
       await User.findByIdAndUpdate(id, pick(req.body, ['password']));
 
-      const model = await User.findById(id);
-      res.send(omit(model, 'password'));
+      const model = await User.findById(id, { password: 0 });
+      res.send(model!);
     } catch (error) {
       if (error instanceof Error) {
         handleResponseError(res, error);
@@ -241,7 +241,7 @@ router.get(
         return handleResponseError(res, new Error('Bad format id'));
       }
 
-      const model = await User.findById(id);
+      const model = await User.findById(id, { password: 0 });
       if (!model) {
         return handleResponseError(res, new Error('Product not found'));
       }
@@ -304,7 +304,7 @@ router.put(
         pick(req.body, ['name', 'email', 'age', 'sex', 'status'])
       );
 
-      const model = await User.findById(id);
+      const model = await User.findById(id, { password: 0 });
       res.send(model!);
     } catch (error) {
       if (error instanceof Error) {
@@ -323,7 +323,9 @@ router.delete(
         return handleResponseError(res, new Error('Bad format id'));
       }
 
-      const deletedModel = await User.findByIdAndDelete(id);
+      const deletedModel = await User.findByIdAndDelete(id, {
+        select: '-password',
+      });
       res.send(deletedModel!);
     } catch (error) {
       if (error instanceof Error) {
