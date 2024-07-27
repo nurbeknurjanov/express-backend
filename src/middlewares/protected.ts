@@ -49,7 +49,7 @@ export const isAuthorized = function (
 
     return next();
   } catch (e) {
-    return res.status(401).send({ message: 'Forbidden' });
+    return res.status(403).send({ message: 'Forbidden' });
   }
 
   //throw new Error('Not authorized')

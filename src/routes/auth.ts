@@ -15,18 +15,21 @@ router
 
     try {
       const payload = JWT.parseToken(refreshToken);
-      const user = await User.findById(payload.user._id);
+      const user = await User.findById(payload.user._id, { password: 0 });
+      if (!user) {
+        return res.status(403).send({ message: 'User not found' });
+      }
       const accessToken = JWT.generateToken(
         {
           type: 'accessToken',
-          user: user!,
+          user: user,
         },
         60 * 1000
       ); //1 min
 
       res.send(accessToken);
     } catch (e) {
-      res.status(401).send({ message: 'Refresh token is wrong' });
+      res.status(403).send({ message: 'Refresh token is wrong' });
     }
   });
 
