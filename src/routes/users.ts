@@ -16,7 +16,7 @@ import {
   IPagination,
 } from '../models';
 import { ObjectId } from 'mongodb';
-import { pick } from 'lodash';
+import { pick, omit } from 'lodash';
 
 const router = express.Router();
 
@@ -79,7 +79,10 @@ router.get(
 
 router.put(
   '/profile/change-password',
-  async function (req: Request<never, IUser, IUserPost, never>, res) {
+  async function (
+    req: Request<never, Omit<IUser, 'password'>, IUserPost, never>,
+    res
+  ) {
     try {
       const { accessToken } = req.cookies;
       const payload = JWT.parseToken(accessToken);
@@ -88,7 +91,7 @@ router.put(
       await User.findByIdAndUpdate(id, pick(req.body, ['password']));
 
       const model = await User.findById(id);
-      res.send(model!);
+      res.send(omit(model, 'password'));
     } catch (error) {
       if (error instanceof Error) {
         handleResponseError(res, error);
@@ -99,7 +102,10 @@ router.put(
 
 router.put(
   '/profile',
-  async function (req: Request<never, IUser, IUserPost, never>, res) {
+  async function (
+    req: Request<never, Omit<IUser, 'password'>, IUserPost, never>,
+    res
+  ) {
     try {
       const { accessToken } = req.cookies;
       const payload = JWT.parseToken(accessToken);
@@ -121,7 +127,7 @@ router.put(
       );
 
       const model = await User.findById(id);
-      res.send(model!);
+      res.send(omit(model, 'password'));
     } catch (error) {
       if (error instanceof Error) {
         handleResponseError(res, error);
@@ -132,7 +138,10 @@ router.put(
 
 router.put(
   '/:id/change-password',
-  async function (req: Request<{ id: string }, IUser, IUserPost, never>, res) {
+  async function (
+    req: Request<{ id: string }, Omit<IUser, 'password'>, IUserPost, never>,
+    res
+  ) {
     try {
       const id = req.params.id;
       if (!ObjectId.isValid(id)) {
@@ -142,7 +151,7 @@ router.put(
       await User.findByIdAndUpdate(id, pick(req.body, ['password']));
 
       const model = await User.findById(id);
-      res.send(model!);
+      res.send(omit(model, 'password'));
     } catch (error) {
       if (error instanceof Error) {
         handleResponseError(res, error);
