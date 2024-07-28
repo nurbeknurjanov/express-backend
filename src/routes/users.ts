@@ -93,7 +93,7 @@ router.put(
       const payload = JWT.parseToken(accessToken);
       const id = payload.user._id;
       const currentPasswordCorrect = await User.findOne({
-        password: req.body.password,
+        password: req.body.currentPassword,
         _id: id,
       });
       if (!currentPasswordCorrect) {
