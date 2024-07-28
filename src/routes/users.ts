@@ -80,13 +80,27 @@ router.get(
 router.put(
   '/profile/change-password',
   async function (
-    req: Request<never, Omit<IUser, 'password'>, IUserPost, never>,
+    req: Request<
+      never,
+      Omit<IUser, 'password'>,
+      Pick<IUserPost, 'password'> & { currentPassword: string },
+      never
+    >,
     res
   ) {
     try {
       const { accessToken } = req.cookies;
       const payload = JWT.parseToken(accessToken);
       const id = payload.user._id;
+      const currentPasswordCorrect = await User.findOne({
+        password: req.body.password,
+        _id: id,
+      });
+      if (!currentPasswordCorrect) {
+        return handleResponseFieldsError(res, {
+          currentPassword: 'Current password is wrong',
+        });
+      }
 
       await User.findByIdAndUpdate(id, pick(req.body, ['password']));
 
