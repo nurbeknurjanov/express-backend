@@ -220,7 +220,7 @@ router.get(
         cursor.where('sex').equals(sex);
       }
       if (status) {
-        cursor.where('age').equals(status);
+        cursor.where('status').equals(status);
       }
 
       const list = await cursor;
