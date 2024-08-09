@@ -224,12 +224,10 @@ router.get(
         cursor.where('status').equals(status);
       }
       if (createdAtFrom) {
-        cursor
-          .where('createdAt')
-          .gte(new Date(createdAtFrom).getMilliseconds());
+        cursor.where('createdAt').gte(new Date(createdAtFrom).getTime());
       }
       if (createdAtTo) {
-        cursor.where('createdAt').lte(new Date(createdAtTo).getMilliseconds());
+        cursor.where('createdAt').lte(new Date(createdAtTo).getTime());
       }
 
       const list = await cursor;
