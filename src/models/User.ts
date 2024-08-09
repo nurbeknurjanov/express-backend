@@ -22,8 +22,10 @@ export interface IUser {
 }
 type IUserWithoutSystemFields = Omit<IUser, '_id'>;
 export interface IUserPost extends IUserWithoutSystemFields {}
-export interface IUserFilter extends IUserWithoutSystemFields {
-  id: Types.ObjectId;
+export interface IUserFilter extends Partial<IUserWithoutSystemFields> {
+  id?: Types.ObjectId;
+  createdAtFrom?: string;
+  createdAtTo?: string;
 }
 export type IUserSortFields = keyof IUserWithoutSystemFields;
 export interface IUserSort extends ISort<IUserSortFields> {}

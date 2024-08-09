@@ -13,8 +13,8 @@ export interface IProduct {
 
 type IProductWithoutSystemFields = Omit<IProduct, '_id' | 'image'>;
 export interface IProductPost extends IProductWithoutSystemFields {}
-export interface IProductFilter extends IProductWithoutSystemFields {
-  id: string;
+export interface IProductFilter extends Partial<IProductWithoutSystemFields> {
+  id?: string;
 }
 export type IProductSortFields = keyof IProductWithoutSystemFields;
 export interface IProductSort extends ISort<IProductSortFields> {}

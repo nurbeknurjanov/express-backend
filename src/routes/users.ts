@@ -199,7 +199,8 @@ router.get(
         cursor.sort({ [sortField]: sortDirection });
       }
 
-      const { id, name, email, age, sex, status } = req.query;
+      const { id, name, email, age, sex, status, createdAtTo, createdAtFrom } =
+        req.query;
       if (id) {
         cursor.where('_id').equals(id);
       }
@@ -221,6 +222,14 @@ router.get(
       }
       if (status) {
         cursor.where('status').equals(status);
+      }
+      if (createdAtFrom) {
+        cursor
+          .where('createdAt')
+          .gte(new Date(createdAtFrom).getMilliseconds());
+      }
+      if (createdAtTo) {
+        cursor.where('createdAt').lte(new Date(createdAtTo).getMilliseconds());
       }
 
       const list = await cursor;

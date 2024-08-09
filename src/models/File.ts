@@ -20,10 +20,10 @@ export interface IFile {
 
 type IFileWithoutSystemFields = Omit<IFile, '_id' | 'url' | 'model'>;
 export interface IFilePost extends IFileWithoutSystemFields {}
-export interface IFileFilter extends IFileWithoutSystemFields {
-  id: string;
-  type: string;
-  modelSearch: string;
+export interface IFileFilter extends Partial<IFileWithoutSystemFields> {
+  id?: string;
+  type?: string;
+  modelSearch?: string;
 }
 export type IFileSortFields = keyof IFileWithoutSystemFields;
 export interface IFileSort extends ISort<IFileSortFields> {}
