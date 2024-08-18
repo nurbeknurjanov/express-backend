@@ -104,14 +104,20 @@ router.put(
         });
       }
 
+      const checkModel = await User.findById(id, { password: 0 });
+      if (checkModel?.email === 'nurbek.nurjanov@mail.ru') {
+        return handleResponseError(
+          res,
+          new Error("Administrator's password is not allowed to change")
+        );
+      }
+
       await User.findByIdAndUpdate(id, pick(req.body, ['password']));
 
       const model = await User.findById(id, { password: 0 });
       res.send(model!);
     } catch (error) {
-      if (error instanceof Error) {
-        handleResponseError(res, error);
-      }
+      handleResponseError(res, error as Error);
     }
   }
 );
@@ -126,6 +132,14 @@ router.put(
       const { accessToken } = req.cookies;
       const payload = JWT.parseToken(accessToken);
       const id = payload.user._id;
+
+      const checkModel = await User.findById(id, { password: 0 });
+      if (checkModel?.email === 'nurbek.nurjanov@mail.ru') {
+        return handleResponseError(
+          res,
+          new Error("Administrator's data is not allowed to change")
+        );
+      }
 
       const existEmailUser = await User.findOne({
         email: req.body.email,
@@ -162,6 +176,21 @@ router.put(
       const id = req.params.id;
       if (!ObjectId.isValid(id)) {
         return handleResponseError(res, new Error('Bad format id'));
+      }
+
+      const checkModel = await User.findById(id, { password: 0 });
+      if (checkModel?.email === 'nurbek.nurjanov@mail.ru') {
+        return handleResponseError(
+          res,
+          new Error("Administrator's password is not allowed to change")
+        );
+      }
+
+      if (checkModel?.email === 'nurbek.nurjanov@mail.ru') {
+        return handleResponseError(
+          res,
+          new Error("Administrator's data is not allowed to change")
+        );
       }
 
       await User.findByIdAndUpdate(id, pick(req.body, ['password']));
@@ -312,6 +341,14 @@ router.put(
         return handleResponseError(res, new Error('Bad format id'));
       }
 
+      const checkModel = await User.findById(id, { password: 0 });
+      if (checkModel?.email === 'nurbek.nurjanov@mail.ru') {
+        return handleResponseError(
+          res,
+          new Error("Administrator's data is not allowed to change")
+        );
+      }
+
       const existEmailUser = await User.findOne({
         email: req.body.email,
         _id: { $ne: id },
@@ -344,6 +381,14 @@ router.delete(
       const id = req.params.id;
       if (!ObjectId.isValid(id)) {
         return handleResponseError(res, new Error('Bad format id'));
+      }
+
+      const checkModel = await User.findById(id, { password: 0 });
+      if (checkModel?.email === 'nurbek.nurjanov@mail.ru') {
+        return handleResponseError(
+          res,
+          new Error('Administrator is not allowed to delete')
+        );
       }
 
       const deletedModel = await User.findByIdAndDelete(id, {
