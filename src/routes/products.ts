@@ -19,6 +19,9 @@ router.get(
   '/generate',
   async function (req: Request<never, string, never, never>, res) {
     try {
+      await File.deleteMany({});
+      await Product.deleteMany({});
+
       for (let i = 0; i <= 48; i++) {
         const preModel = new Product({ name: 'Product ' + i, description: '' });
         const model = await preModel.save();

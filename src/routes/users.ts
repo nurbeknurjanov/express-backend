@@ -22,9 +22,9 @@ const router = express.Router();
 
 export const data = [
   {
-    name: 'Alan',
-    email: 'alan@mail.ru',
-    age: 18,
+    name: 'Nurbek Nurjanov',
+    email: 'nurbek.nurjanov@mail.ru',
+    age: 20,
     sex: SEX.MALE,
     status: STATUS.ENABLED,
   },
@@ -62,6 +62,8 @@ router.get(
   '/generate',
   async function (req: Request<never, string, never, never>, res) {
     try {
+      await User.deleteMany({});
+
       data.forEach(el => {
         const preModel = new User(el);
         preModel.password = '123123';
