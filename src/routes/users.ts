@@ -18,12 +18,13 @@ import {
 import { ObjectId } from 'mongodb';
 import { pick } from 'lodash';
 
+const ADMINISTRATOR_EMAIL = 'nurbek.nurjanov@mail.ru';
 const router = express.Router();
 
 export const data = [
   {
     name: 'Nurbek Nurjanov',
-    email: 'nurbek.nurjanov@mail.ru',
+    email: ADMINISTRATOR_EMAIL,
     age: 20,
     sex: SEX.MALE,
     status: STATUS.ENABLED,
@@ -105,7 +106,7 @@ router.put(
       }
 
       const checkModel = await User.findById(id, { password: 0 });
-      if (checkModel?.email === 'nurbek.nurjanov@mail.ru') {
+      if (checkModel?.email === ADMINISTRATOR_EMAIL) {
         return handleResponseError(
           res,
           new Error("Administrator's password is not allowed to change")
@@ -134,7 +135,7 @@ router.put(
       const id = payload.user._id;
 
       const checkModel = await User.findById(id, { password: 0 });
-      if (checkModel?.email === 'nurbek.nurjanov@mail.ru') {
+      if (checkModel?.email === ADMINISTRATOR_EMAIL) {
         return handleResponseError(
           res,
           new Error("Administrator's data is not allowed to change")
@@ -179,14 +180,14 @@ router.put(
       }
 
       const checkModel = await User.findById(id, { password: 0 });
-      if (checkModel?.email === 'nurbek.nurjanov@mail.ru') {
+      if (checkModel?.email === ADMINISTRATOR_EMAIL) {
         return handleResponseError(
           res,
           new Error("Administrator's password is not allowed to change")
         );
       }
 
-      if (checkModel?.email === 'nurbek.nurjanov@mail.ru') {
+      if (checkModel?.email === ADMINISTRATOR_EMAIL) {
         return handleResponseError(
           res,
           new Error("Administrator's data is not allowed to change")
@@ -342,7 +343,7 @@ router.put(
       }
 
       const checkModel = await User.findById(id, { password: 0 });
-      if (checkModel?.email === 'nurbek.nurjanov@mail.ru') {
+      if (checkModel?.email === ADMINISTRATOR_EMAIL) {
         return handleResponseError(
           res,
           new Error("Administrator's data is not allowed to change")
@@ -384,7 +385,7 @@ router.delete(
       }
 
       const checkModel = await User.findById(id, { password: 0 });
-      if (checkModel?.email === 'nurbek.nurjanov@mail.ru') {
+      if (checkModel?.email === ADMINISTRATOR_EMAIL) {
         return handleResponseError(
           res,
           new Error('Administrator is not allowed to delete')
