@@ -60,7 +60,7 @@ const schema = new Schema<IFile, FileModel>(
             return `${process.env.BACKEND_URL}/images/${this._id}.${this.ext}`;
           }
 
-          return `${process.env.AWS_URL}/${this._id}`;
+          return `${process.env.AWS_URL}/${this._id}.${this.ext}`;
         },
       },
       model: {

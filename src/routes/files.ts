@@ -102,7 +102,7 @@ router.post(
         } else {
           const command = new PutObjectCommand({
             Bucket: process.env.AWS_BUCKET_NAME,
-            Key: model._id.toString(),
+            Key: `${model._id.toString()}.${model.ext}`,
             Body: buffer,
             //Body: fs.createReadStream(path),
           });
