@@ -93,9 +93,11 @@ schema.pre(
         });
       }
 
-      await fsPromise.unlink(
-        `${__dirname}/../../public/images/${doc._id}.${doc.ext}`
-      );
+      if (process.env.NODE_ENV === 'development') {
+        await fsPromise.unlink(
+          `${__dirname}/../../public/images/${doc._id}.${doc.ext}`
+        );
+      }
     } catch (err) {
       //next(err);
       return new Promise((resolve, reject) => {
