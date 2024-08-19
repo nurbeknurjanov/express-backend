@@ -6,7 +6,7 @@ export const hasRefreshToken = function (
   res: Response,
   next: NextFunction
 ) {
-  const { refreshToken } = req.cookies;
+  const refreshToken = req.cookies.refreshToken || req.headers.refreshtoken;
 
   if (!refreshToken) {
     return res.status(403).send({ message: 'Refresh token is missing' });
@@ -39,8 +39,7 @@ export const isAuthorized = function (
   const { authorization, cookie: _cookieString } = req.headers;
   const _accessToken = authorization?.replace('Bearer ', '');
 
-  const { accessToken } = req.cookies;
-
+  const accessToken = req.cookies.accessToken || req.headers.accesstoken;
   if (!accessToken) {
     return res.status(401).send({ message: 'You are not authorized' });
   }

@@ -11,7 +11,7 @@ router
   .get('/get-access-token', async function (req: Request<{}, {}, {}, {}>, res) {
     const { authorization, cookie: _cookieString } = req.headers;
     const _accessToken = authorization?.replace('Bearer ', '');
-    const { refreshToken } = req.cookies;
+    const refreshToken = req.cookies.refreshToken || req.headers.refreshtoken;
 
     try {
       const payload = JWT.parseToken(refreshToken);
