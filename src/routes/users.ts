@@ -296,7 +296,7 @@ router.get(
 
       const model = await User.findById(id, { password: 0 });
       if (!model) {
-        return handleResponseError(res, new Error('Product not found'));
+        return handleResponseError(res, new Error('User not found'));
       }
 
       res.send(model!);
