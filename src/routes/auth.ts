@@ -24,8 +24,7 @@ router
           type: 'accessToken',
           user: user,
         },
-        10 * 1000
-        //60 * 1000
+        60 * 1000
       ); //1 min
 
       res.send(accessToken);
@@ -70,8 +69,8 @@ router.post(
         type: 'accessToken',
         user,
       },
-      10 * 1000
-      //60 * 1000
+
+      60 * 1000
     ); //1 minute
 
     return res.send({ refreshToken, accessToken });
