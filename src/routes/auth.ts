@@ -2,7 +2,6 @@ import express, { Request, Response, NextFunction } from 'express';
 import { hasRefreshToken } from '../middlewares';
 import { JWT } from '../helpers/JWT';
 import { User } from '../models';
-import { pick } from 'lodash';
 
 const router = express.Router();
 
