@@ -11,7 +11,7 @@ router
   .get('/get-access-token', async function (req: Request<{}, {}, {}, {}>, res) {
     const { authorization, cookie: _cookieString } = req.headers;
     const _accessToken = authorization?.replace('Bearer ', '');
-    const refreshToken = req.cookies.refreshToken || req.headers.refreshtoken;
+    const refreshToken = req.headers['x-refresh-token'] as string;
 
     try {
       const payload = JWT.parseToken(refreshToken);
@@ -24,7 +24,8 @@ router
           type: 'accessToken',
           user: user,
         },
-        60 * 1000
+        10 * 1000
+        //60 * 1000
       ); //1 min
 
       res.send(accessToken);
@@ -69,7 +70,8 @@ router.post(
         type: 'accessToken',
         user,
       },
-      60 * 1000
+      10 * 1000
+      //60 * 1000
     ); //1 minute
 
     return res.send({ refreshToken, accessToken });
