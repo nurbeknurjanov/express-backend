@@ -92,7 +92,8 @@ router.put(
     res
   ) {
     try {
-      const accessToken = req.headers.accesstoken || req.cookies.accessToken;
+      //const accessToken = req.headers.accesstoken || req.cookies.accessToken;
+      const accessToken = req.headers['x-access-token'] as string;
       const payload = JWT.parseToken(accessToken);
       const id = payload.user._id;
       const currentPasswordCorrect = await User.findOne({
@@ -130,7 +131,8 @@ router.put(
     res
   ) {
     try {
-      const accessToken = req.headers.accesstoken || req.cookies.accessToken;
+      //const accessToken = req.headers.accesstoken || req.cookies.accessToken;
+      const accessToken = req.headers['x-access-token'] as string;
       const payload = JWT.parseToken(accessToken);
       const id = payload.user._id;
 
