@@ -23,7 +23,7 @@ router
           type: 'accessToken',
           user: user,
         },
-        60 * 1000
+        5 * 60 * 1000
       ); //1 min
 
       res.send(accessToken);
@@ -69,7 +69,7 @@ router.post(
         user,
       },
 
-      60 * 1000
+      5 * 60 * 1000
     ); //1 minute
 
     return res.send({ refreshToken, accessToken });
